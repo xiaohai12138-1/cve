@@ -1,10 +1,10 @@
-# **Vulnerability Introduction**
+# Vulnerability Introduction
 The custom scheduled task feature in the CRMEB backend contains a server-side code execution vulnerability. An attacker with high-privilege backend access can submit `customCode` via `POST /adminapi/system/crontab/save`; the application persists this value, and subsequently, during the scheduled task execution phase, retrieves the content and executes it directly using `eval()`.
 
 Source code download link：https://gitee.com/ZhongBangKeJi/CRMEB
 https://github.com/xiaohai12138-1/picx-images-hosting/raw/master/CRMEB/image.7p4akhk2iy.webp
 
-**Vulnerability Analysis**
+# Vulnerability Analysis
 
 In lines 68-95 of crmeb/app/adminapi/controller/v1/system/SystemCrontab.php, the controller receives the customCode field when mark is customTimer, performing only a small number of blacklist checks for dangerous keywords.
 https://github.com/xiaohai12138-1/picx-images-hosting/raw/master/CRMEB/image.4ubmeotaon.webp
@@ -18,7 +18,7 @@ https://github.com/xiaohai12138-1/picx-images-hosting/raw/master/CRMEB/image.7p4
 At lines 264–268 of `crmeb/app/services/system/crontab/CrontabRunServices.php`, `eval` executes `customCode`.
 https://github.com/xiaohai12138-1/picx-images-hosting/raw/master/CRMEB/image.5trpruwtme.webp
 
-# **Vulnerability reproduction**
+# Vulnerability reproduction
 
 After accessing the backend, go to Maintenance > Scheduled Tasks > Custom Tasks > Add Scheduled Task.
 https://github.com/xiaohai12138-1/picx-images-hosting/raw/master/CRMEB/image.3d5hcxq0uf.webp
